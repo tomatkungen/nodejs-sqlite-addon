@@ -1,0 +1,2 @@
+g++ test.c -l sqlite3 && ./a.out && cat test.db
+
