@@ -10,7 +10,7 @@
 ### Generate and Build addon
 
 * Type in terminal root map:
-* Will build the Addon in Build/Release/<addon>.node
+* Will build the Addon in Build/Release/< addon-name >.node
 
 ```
 
@@ -22,7 +22,7 @@ node-gyp build -Wunused-result
 
 ```
 
-const testAddon = require('./build/Release/<addon>.node');
+const testAddon = require('./build/Release/< addon-name >.node');
 
 ```
 
