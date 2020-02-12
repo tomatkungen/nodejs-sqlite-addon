@@ -324,7 +324,7 @@ namespace hi {
 
     sqlite3 *db;
     int rc;
-    sqlite3_stmt *stmt;
+    // sqlite3_stmt *stmt;
 
     // if not args[0] equals databasename, args[1] equals query
     if (args.Length() < 2) {
@@ -368,12 +368,13 @@ namespace hi {
 
     sqlite3_close(db);
   }
+
   void Insert(const FunctionCallbackInfo<Value>& args) {
     Isolate* isolate = args.GetIsolate();
 
     sqlite3 *db;
     int rc;
-    sqlite3_stmt *stmt;
+    // sqlite3_stmt *stmt;
 
     // if not args[0] equals databasename, args[1] equals query
     if (args.Length() < 2) {
