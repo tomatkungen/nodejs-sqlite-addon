@@ -18,7 +18,7 @@ node-gyp build -Wunused-result
 
 ```
 
-* The build can then be import to your node js project:
+* The build can then be imported to your node js project:
 
 ```
 
