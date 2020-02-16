@@ -112,7 +112,7 @@ INCS_Release := \
 	-I/Users/kimkarlsson/Library/Caches/node-gyp/12.13.0/deps/v8/include
 
 OBJS := \
-	$(obj).target/$(TARGET)/hej.o \
+	$(obj).target/$(TARGET)/sqlite-bridge.o \
 	$(obj).target/$(TARGET)/sqlite3.o
 
 # Add to the list of files we specially track dependencies for.
