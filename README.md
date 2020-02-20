@@ -30,7 +30,7 @@
 
 ```
 /* Will build the Addon in Build/Release/< addon-name >.node */
-node-gyp build -Wunused-result
+node-gyp build
 
 ```
 

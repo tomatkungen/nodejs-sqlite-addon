@@ -2,7 +2,7 @@
 {
   "targets": [
     {
-      "target_name": "hello",
+      "target_name": "sqlitebridge",
       "cflags!": [ "-fno-exceptions" ],
       "cflags_cc!": [ "-fno-exceptions" ],
       "sources": [ "sqlite-bridge.cc", "sqlite3.c", "sqlite3.h" ],

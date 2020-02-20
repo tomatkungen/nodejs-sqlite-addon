@@ -19,68 +19,13 @@ namespace hi {
   using v8::Number;
   using v8::Null;
 
-  static int callback(void *NotUsed, int argc, char **argv, char **azColName) {
-    int i;
-    for(i = 0; i<argc; i++) {
-        printf("%s = %s\n", azColName[i], argv[i] ? argv[i] : "NULL");
-    }
-    printf("\n");
-    return 0;
-  }
-
-  void Method(const FunctionCallbackInfo<Value>& args) {
+  void Version(const FunctionCallbackInfo<Value>& args) {
     Isolate* isolate = args.GetIsolate();
     args.GetReturnValue().Set(String::NewFromUtf8(
-        isolate, "world", NewStringType::kNormal).ToLocalChecked());
+        isolate, "Tomatkungen v1.0", NewStringType::kNormal).ToLocalChecked());
   }
 
-  void Exec(const FunctionCallbackInfo<Value>& args) {
-    Isolate* isolate = args.GetIsolate();
-
-    sqlite3 *db;
-    char *zErrMsg = 0;
-    int rc;
-    const char *sql;
-
-    rc = sqlite3_open("test.db", &db);
-
-    if( rc ) {
-      // args.GetReturnValue().Set(String::NewFromUtf8(
-      //   isolate, "Can't open database:", NewStringType::kNormal).ToLocalChecked());
-      //fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
-      // return(0);
-    } else {
-      //args.GetReturnValue().Set(String::NewFromUtf8(
-        //isolate, "Opened database successfully:", NewStringType::kNormal).ToLocalChecked());
-      // fprintf(stderr, "Opened database successfully\n");
-    }
-    
-      /* Create SQL statement */
-    sql = "CREATE TABLE COMPANY("  \
-      "ID INT PRIMARY KEY     NOT NULL," \
-      "NAME           TEXT    NOT NULL," \
-      "AGE            INT     NOT NULL," \
-      "ADDRESS        CHAR(50)," \
-      "SALARY         REAL );";
-
-    /* Execute SQL statement */
-    rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
-    
-    if( rc != SQLITE_OK ){
-      args.GetReturnValue().Set(String::NewFromUtf8(
-        isolate, "SQL error:", NewStringType::kNormal).ToLocalChecked());
-      //fprintf(stderr, "SQL error: %s\n", zErrMsg);
-      sqlite3_free(zErrMsg);
-    } else {
-      args.GetReturnValue().Set(String::NewFromUtf8(
-        isolate, "Table created successfully:", NewStringType::kNormal).ToLocalChecked());
-      //fprintf(stdout, "Table created successfully\n");
-    }
-
-    sqlite3_close(db);
-  }
-
-  void Create(const FunctionCallbackInfo<Value>& args) {
+  void Execute(const FunctionCallbackInfo<Value>& args) {
     Isolate* isolate = args.GetIsolate();
 
     sqlite3 *db;
@@ -157,6 +102,9 @@ namespace hi {
 
     sqlite3_finalize(stmt);
     sqlite3_close(db);
+
+    args.GetReturnValue().Set(String::NewFromUtf8(
+        isolate, "Execute successfully", NewStringType::kNormal).ToLocalChecked());
   }
  
   void Select(const FunctionCallbackInfo<Value>& args) {
@@ -244,7 +192,7 @@ namespace hi {
           case (SQLITE3_TEXT): {
               const char * columText = reinterpret_cast<const char*>(sqlite3_column_text(stmt, i));
 
-              sqlObj->Set(context, 
+              (void)sqlObj->Set(context, 
                           String::NewFromUtf8(isolate,
                                               columnName,
                                               NewStringType::kNormal).ToLocalChecked(),
@@ -257,7 +205,7 @@ namespace hi {
           case (SQLITE_INTEGER): {
             int columnInteger = sqlite3_column_int64(stmt, i);
 
-            sqlObj->Set(context, 
+            (void)sqlObj->Set(context, 
                         String::NewFromUtf8(isolate,
                                             columnName,
                                             NewStringType::kNormal).ToLocalChecked(),
@@ -268,7 +216,7 @@ namespace hi {
           case (SQLITE_FLOAT): {
             double columnDouble = sqlite3_column_double(stmt, i);
 
-            sqlObj->Set(context, 
+            (void)sqlObj->Set(context, 
                         String::NewFromUtf8(isolate,
                                             columnName,
                                             NewStringType::kNormal).ToLocalChecked(),
@@ -279,7 +227,7 @@ namespace hi {
           }
           case (SQLITE_BLOB): {
 
-            sqlObj->Set(context, 
+            (void)sqlObj->Set(context, 
                         String::NewFromUtf8(isolate,
                                             columnName,
                                             NewStringType::kNormal).ToLocalChecked(),
@@ -293,7 +241,7 @@ namespace hi {
           }
           case (SQLITE_NULL): {
             
-            sqlObj->Set(context, 
+            (void)sqlObj->Set(context, 
                         String::NewFromUtf8(isolate,
                                             columnName,
                                             NewStringType::kNormal).ToLocalChecked(),
@@ -309,7 +257,7 @@ namespace hi {
 
         
       }
-      sqlAry->Set(context, sqlRow, sqlObj);
+      (void)sqlAry->Set(context, sqlRow, sqlObj);
       sqlRow++;
     }
 
@@ -319,115 +267,12 @@ namespace hi {
     args.GetReturnValue().Set(sqlAry);
   }
 
-  void Update(const FunctionCallbackInfo<Value>& args) {
-    Isolate* isolate = args.GetIsolate();
-
-    sqlite3 *db;
-    int rc;
-    // sqlite3_stmt *stmt;
-
-    // if not args[0] equals databasename, args[1] equals query
-    if (args.Length() < 2) {
-      isolate->ThrowException(Exception::TypeError(
-        String::NewFromUtf8(isolate,
-                            "Databasename and query should be supplied",
-                            NewStringType::kNormal).ToLocalChecked()));
-      return;
-    }
-
-    // if not args[0] equals String, args[1] equals String
-    if (!args[0]->IsString() || !args[1]->IsString()) {
-      isolate->ThrowException(Exception::TypeError(
-        String::NewFromUtf8(isolate,
-                            "Databasename and query should be strings",
-                            NewStringType::kNormal).ToLocalChecked()));
-      return;
-    }
-
-    // v8 to cpp string
-    v8::String::Utf8Value str(isolate, args[0]);
-    std::string firstArg(*str);
-    
-    // v8 to cpp string
-    v8::String::Utf8Value s(isolate, args[1]);
-    std::string secondArg(*s);
-
-    // Open database
-    rc = sqlite3_open(
-      firstArg.c_str(), &db
-    );
-
-    if ( rc != SQLITE_OK && rc != SQLITE_DONE ) {
-      isolate->ThrowException(Exception::TypeError(
-        String::NewFromUtf8(isolate,
-                            "Can't open databases",
-                            NewStringType::kNormal).ToLocalChecked()));
-      return;
-    }
-
-
-    sqlite3_close(db);
-  }
-
-  void Insert(const FunctionCallbackInfo<Value>& args) {
-    Isolate* isolate = args.GetIsolate();
-
-    sqlite3 *db;
-    int rc;
-    // sqlite3_stmt *stmt;
-
-    // if not args[0] equals databasename, args[1] equals query
-    if (args.Length() < 2) {
-      isolate->ThrowException(Exception::TypeError(
-        String::NewFromUtf8(isolate,
-                            "Databasename and query should be supplied",
-                            NewStringType::kNormal).ToLocalChecked()));
-      return;
-    }
-
-    // if not args[0] equals String, args[1] equals String
-    if (!args[0]->IsString() || !args[1]->IsString()) {
-      isolate->ThrowException(Exception::TypeError(
-        String::NewFromUtf8(isolate,
-                            "Databasename and query should be strings",
-                            NewStringType::kNormal).ToLocalChecked()));
-      return;
-    }
-
-    // v8 to cpp string
-    v8::String::Utf8Value str(isolate, args[0]);
-    std::string firstArg(*str);
-    
-    // v8 to cpp string
-    v8::String::Utf8Value s(isolate, args[1]);
-    std::string secondArg(*s);
-
-    // Open database
-    rc = sqlite3_open(
-      firstArg.c_str(), &db
-    );
-
-    if ( rc != SQLITE_OK && rc != SQLITE_DONE ) {
-      isolate->ThrowException(Exception::TypeError(
-        String::NewFromUtf8(isolate,
-                            "Can't open databases",
-                            NewStringType::kNormal).ToLocalChecked()));
-      return;
-    }
-
-    sqlite3_close(db);
-  }
-
-
   void Initialize(Local<Object> exports) {
-    NODE_SET_METHOD(exports, "hello", Method);
-    NODE_SET_METHOD(exports, "exec", Exec);
-    NODE_SET_METHOD(exports, "Create", Create);
+    NODE_SET_METHOD(exports, "Version", Version);
+    NODE_SET_METHOD(exports, "Execute", Execute);
     NODE_SET_METHOD(exports, "Select", Select);
-    NODE_SET_METHOD(exports, "Update", Update);
-    NODE_SET_METHOD(exports, "Insert", Insert);
   }
 
-  NODE_MODULE(NODE_GYP_MODULE_NAME, Initialize)
+  NODE_MODULE(NODE_GYP_MODULE_NAME, Initialize);
 
 }
