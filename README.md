@@ -30,6 +30,7 @@
 
 ```
 /* Will build the Addon in Build/Release/< addon-name >.node */
+
 node-gyp build
 
 ```
@@ -40,6 +41,9 @@ node-gyp build
 
 const testAddon = require('./build/Release/< addon-name >.node');
 
+testAddon.Version()
+testAddon.Execute(<Database>, <query Update, Delete, Insert>)
+testAddon.Select(<Database>, <query Select>)
 ```
 
 ### Reference
