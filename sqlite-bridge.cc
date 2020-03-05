@@ -1,7 +1,7 @@
-  
+
 #include <node.h>
 #include <node_buffer.h>
-#include <sqlite3.h> 
+#include <sqlite3.h>
 
 using namespace v8;
 
