@@ -31,7 +31,7 @@
 ```
 /* Will build the Addon in Build/Release/< addon-name >.node */
 
-node-gyp build
+npx node-gyp build
 
 ```
 
@@ -50,3 +50,4 @@ testAddon.Select(<Database>, <query Select>)
 
 * [NodeJs Addon - Create and Build addon](https://nodejs.org/api/addons.html#addons_c_addons)
 * [SQLite Amalgamation - sqlite3.cc sqlite3.h](https://www.sqlite.org/amalgamation.html)
+* [NODE_MODULE_VERSION](https://github.com/nodejs/node/blob/main/doc/abi_version_registry.json)

@@ -22,7 +22,7 @@ namespace hi {
   void Version(const FunctionCallbackInfo<Value>& args) {
     Isolate* isolate = args.GetIsolate();
     args.GetReturnValue().Set(String::NewFromUtf8(
-        isolate, "Tomatkungen v1.0", NewStringType::kNormal).ToLocalChecked());
+        isolate, "Tomatkungen v1.0 sqlite 3.44.2", NewStringType::kNormal).ToLocalChecked());
   }
 
   void Execute(const FunctionCallbackInfo<Value>& args) {

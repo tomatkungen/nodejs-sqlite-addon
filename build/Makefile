@@ -327,7 +327,7 @@ endif
 
 quiet_cmd_regen_makefile = ACTION Regenerating $@
 cmd_regen_makefile = cd $(srcdir); /usr/local/lib/node_modules/node-gyp/gyp/gyp_main.py -fmake --ignore-environment "--toplevel-dir=." -I/Users/kimkarlsson/Source/nodejs-sqlite-addon/build/config.gypi -I/usr/local/lib/node_modules/node-gyp/addon.gypi -I/Users/kimkarlsson/Library/Caches/node-gyp/12.13.0/include/node/common.gypi "--depth=." "-Goutput_dir=." "--generator-output=build" "-Dlibrary=shared_library" "-Dvisibility=default" "-Dnode_root_dir=/Users/kimkarlsson/Library/Caches/node-gyp/12.13.0" "-Dnode_gyp_dir=/usr/local/lib/node_modules/node-gyp" "-Dnode_lib_file=/Users/kimkarlsson/Library/Caches/node-gyp/12.13.0/<(target_arch)/node.lib" "-Dmodule_root_dir=/Users/kimkarlsson/Source/nodejs-sqlite-addon" "-Dnode_engine=v8" binding.gyp
-Makefile: $(srcdir)/../../Library/Caches/node-gyp/12.13.0/include/node/common.gypi $(srcdir)/build/config.gypi $(srcdir)/binding.gyp $(srcdir)/../../../../usr/local/lib/node_modules/node-gyp/addon.gypi
+Makefile: $(srcdir)/../../Library/Caches/node-gyp/12.13.0/include/node/common.gypi $(srcdir)/../../Source/nodejs-sqlite-addon/build/config.gypi $(srcdir)/binding.gyp $(srcdir)/../../../../usr/local/lib/node_modules/node-gyp/addon.gypi
 	$(call do_cmd,regen_makefile)
 
 # "all" is a concatenation of the "all" targets from all the included
